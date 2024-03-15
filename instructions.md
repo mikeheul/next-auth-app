@@ -1,5 +1,8 @@
 # Next Auth App (NextAuth.js and MongoDB)
 
+https://www.youtube.com/watch?v=PEMfsqZ2-As&ab_channel=GTCoding
+36:03
+
 ## Installation
 ``` properties
 npx create-next-app@latest [name]
