@@ -17,8 +17,8 @@ const RegisterForm = () => {
                     Error message
                 </div>
 
-                <Link className="text-sm mt-3 text-right" href={'/register'}>
-                    Don&apos;t have an account ? <span className="underline">Register</span>
+                <Link className="text-sm mt-3 text-right" href={'/'}>
+                    Already have an account ? <span className="underline">Login</span>
                 </Link>
             </form>
         </div>
