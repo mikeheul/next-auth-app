@@ -1,3 +1,5 @@
+# Next.js Authentication App
+
 This is a Next.js application for user authentication using NextAuth.js, MongoDB, and React. It provides functionalities for user registration, login, logout, and accessing user information.
 
 ## Features
