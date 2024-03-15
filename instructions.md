@@ -214,7 +214,178 @@ export default RegisterForm
 
 - Create api/register folder in app/ and route.js inside "register" folder
 ``` javascript
+import { NextResponse } from "next/server";
 
+export async function POST(req) {
+    try {
+        const { name, email, password } = await req.json();
+
+        console.log("Name : " + name);
+        console.log("Email : " + email);
+        console.log("Pass : " + password);
+
+        return NextResponse.json({ message: "User registered"}, {status: 201})
+    } catch (error) {
+        return NextResponse.json({ message: "An error occured while registering user"}, {status: 500})
+    }
+}
 ```
+
+- Update RegisterForm
+``` javascript
+"use client";
+
+import Link from "next/link"
+import { useState } from "react";
+
+const RegisterForm = () => {
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if(!name || !email || !password) {
+        setError("All fields are required");
+        return;
+    }
+    
+    try {
+        const res = await fetch('api/register', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name, 
+                email, 
+                password,
+            }),
+        });
+        
+        if(res.ok) {
+            const form = e.target;
+            form.reset(); 
+        } else {
+            console.log("User registration failed")
+        }
+    } catch (error) {
+        console.log("Error during registration :", error)
+    }
+  }
+
+  return (
+    <div className="grid place-items-center h-screen">
+        <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
+            <h1 className="text-xl font-bold my-4">Register</h1>
+            <form 
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-3"
+            >
+                <input 
+                    onChange={ e => setName(e.target.value) } 
+                    type="text" 
+                    placeholder="Full Name" 
+                    />
+                <input 
+                    onChange={ e => setEmail(e.target.value) } 
+                    type="text" 
+                    placeholder="Email" 
+                    />
+                <input 
+                    onChange={ e => setPassword(e.target.value) } 
+                    type="password" 
+                    placeholder="Password" 
+                />
+                <button className="bg-green-600 text-white font-bold cursor-pointer px-6 py-2">
+                    Register
+                </button>
+
+                { error && (
+                    <div className="bg-red-500 text-white w-fit text-sm py-1 px-3 rounded-md mt-2">
+                        {error}
+                    </div>
+                )}
+                <Link className="text-sm mt-3 text-right" href={'/'}>
+                    Already have an account ? <span className="underline">Login</span>
+                </Link>
+            </form>
+        </div>
+    </div>
+  )
+}
+
+export default RegisterForm
+```
+
+- Create a .env file (root folder) and add it to gitignore
+
+- Create a lib folder (root folder) and mongodb.js inside
+``` javascript
+import mongoose from "mongoose";
+
+export const connectMongoDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log("Connected to MongoDB")
+    } catch (error) {
+        console.log("Error connecting to MongoDB", error);
+    }
+}
+```
+
+- Add a "models" folder (root folder) and "user.js" inside
+``` javascript
+import mongoose, { Schema, models } from "mongoose";
+
+const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    },
+    { timestamps: true }
+);
+
+const User = models.User || mongoose.model("User", userSchema);
+export default User;
+```
+
+- Update "route.js"
+``` javascript
+import { connectMongoDB } from "@/lib/mongodb";
+import User from "@/models/user";
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs"
+
+export async function POST(req) {
+    try {
+        const { name, email, password } = await req.json();
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await connectMongoDB();
+        await User.create({ name, email, password: hashedPassword });
+
+        return NextResponse.json({ message: "User registered"}, {status: 201})
+    } catch (error) {
+        return NextResponse.json({ message: "An error occured while registering user"}, {status: 500})
+    }
+}
+```
+
+
+
+
 
 
