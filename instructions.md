@@ -61,4 +61,8 @@ const LoginForm = () => {
 }
 ```
 
-- Create new "register" folder
+- Create new "register" folder and page.jsx
+- Create a new component RegisterForm (copy/paste LoginForm and update elements)
+``` javascript
+
+```
