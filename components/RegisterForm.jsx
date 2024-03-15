@@ -29,6 +29,15 @@ export default function RegisterForm() { // Defining a functional component name
         return;
     }
 
+    // Regular expression for password requirements
+    const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[0-9a-zA-Z!@#$%^&*()_+]{8,}$/;
+
+    // Check if password meets the requirements
+    if (!passwordPattern.test(password)) {
+      setError("Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character.");
+      return;
+    }
+
     try {
       const resUserExists = await fetch("api/userExists", { // Checking if user already exists
         method: "POST",
