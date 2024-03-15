@@ -1,43 +1,48 @@
-"use client";
+"use client"; // Indicates that this file should run only on the client-side
 
-import Link from "next/link";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import Link from "next/link"; // Importing the Link component from next/link
+import { useState } from "react"; // Importing the useState hook from React
+import { signIn } from "next-auth/react"; // Importing the signIn function from next-auth/react
+import { useRouter } from "next/navigation"; // Importing the useRouter hook from next/navigation
 
-export default function LoginForm() {
-  const [email, setEmail] = useState("");
+export default function LoginForm() { // Defining a functional component named LoginForm
+
+  // State variables to manage email, password, and error messages
+  const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const router = useRouter();
+  const router = useRouter(); // Initializing the useRouter hook
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Preventing default form submission behavior
 
     try {
-      const res = await signIn("credentials", {
+      const res = await signIn("credentials", { // Signing in with email and password credentials
         email,
         password,
-        redirect: false,
+        redirect: false, // Disabling automatic redirection after sign-in
       });
 
-      if (res.error) {
-        setError("Invalid Credentials");
+      if (res.error) { // If there's an error during sign-in
+        setError("Invalid Credentials"); // Setting error message
         return;
       }
 
-      router.replace("dashboard");
+      router.replace("dashboard"); // Redirecting to the dashboard page
     } catch (error) {
-      console.log(error);
+      console.log(error); // Logging any errors to the console
     }
   };
 
+  // JSX for the login form
   return (
     <div className="grid place-items-center h-screen">
       <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
         <h1 className="text-xl font-bold my-4">Login</h1>
 
+        {/* Form for email and password input */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             onChange={(e) => setEmail(e.target.value)}
@@ -53,11 +58,13 @@ export default function LoginForm() {
             Login
           </button>
           {error && (
+            // Displaying error message if exists
             <div className="bg-red-500 text-white w-fit text-sm py-1 px-3 rounded-md mt-2">
               {error}
             </div>
           )}
 
+          {/* Link to register page */}
           <Link className="text-sm mt-3 text-right" href={"/register"}>
             Don&apos;t have an account? <span className="underline">Register</span>
           </Link>

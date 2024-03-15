@@ -1,33 +1,36 @@
-"use client";
+"use client"; // Indicates that this file should run only on the client-side
 
-import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link"; // Importing the Link component from next/link
+import { useState } from "react"; // Importing the useState hook from React
+import { useRouter } from "next/navigation"; // Importing the useRouter hook from next/navigation
 
-export default function RegisterForm() {
-  const [name, setName] = useState("");
+export default function RegisterForm() { // Defining a functional component named RegisterForm
+
+  // State variables to manage name, email, password, passwordRepeat, and error messages
+  const [name, setName] = useState(""); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [error, setError] = useState("");
 
-  const router = useRouter();
+  const router = useRouter(); // Initializing the useRouter hook
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Preventing default form submission behavior
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password) { // Checking if required fields are not empty
       setError("All fields are necessary.");
       return;
     }
 
-    if(password !== passwordRepeat) {
+    if(password !== passwordRepeat) { // Checking if password and repeated password match
         setError("Passwords do not match");
         return;
     }
 
     try {
-      const resUserExists = await fetch("api/userExists", {
+      const resUserExists = await fetch("api/userExists", { // Checking if user already exists
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +45,7 @@ export default function RegisterForm() {
         return;
       }
 
-      const res = await fetch("api/register", {
+      const res = await fetch("api/register", { // Registering the user
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,23 +57,25 @@ export default function RegisterForm() {
         }),
       });
 
-      if (res.ok) {
+      if (res.ok) { // If registration is successful
         const form = e.target;
-        form.reset();
-        router.push("/");
+        form.reset(); // Resetting the form
+        router.push("/"); // Redirecting to the home page
       } else {
-        console.log("User registration failed.");
+        console.log("User registration failed."); // Logging if registration fails
       }
     } catch (error) {
-      console.log("Error during registration: ", error);
+      console.log("Error during registration: ", error); // Logging any errors during registration
     }
   };
 
+  // JSX for the registration form
   return (
     <div className="grid place-items-center h-screen">
       <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
         <h1 className="text-xl font-bold my-4">Register</h1>
 
+        {/* Form for registration */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             onChange={(e) => setName(e.target.value)}
@@ -96,12 +101,14 @@ export default function RegisterForm() {
             Register
           </button>
 
+          {/* Displaying error message if exists */}
           {error && (
             <div className="bg-red-500 text-white w-fit text-sm py-1 px-3 rounded-md mt-2">
               {error}
             </div>
           )}
 
+          {/* Link to login page */}
           <Link className="text-sm mt-3 text-right" href={"/"}>
             Already have an account? <span className="underline">Login</span>
           </Link>
