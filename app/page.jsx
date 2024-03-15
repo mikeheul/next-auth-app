@@ -10,8 +10,6 @@ export default async function Home() { // Defining an asynchronous function name
   if(session) redirect("/dashboard"); // If a session exists, redirect the user to the dashboard page
   
   return (
-    <main>
-      <LoginForm /> {/* Rendering the LoginForm component */}
-    </main>
+      <LoginForm />
   );
 }

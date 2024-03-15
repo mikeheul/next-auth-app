@@ -13,7 +13,7 @@ export default function RootLayout({ children }) { // Defining a functional comp
   return (
     <html lang="en"> {/* Setting the language of the HTML document */}
       <body className={inter.className}> {/* Applying Inter font to the body */}
-        <main className="h-full">
+        <main className="h-screen bg-slate-400">
           <AuthProvider>{children}</AuthProvider> {/* Wrapping children with AuthProvider */}
         </main>
       </body>
