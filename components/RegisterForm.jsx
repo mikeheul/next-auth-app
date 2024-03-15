@@ -65,8 +65,8 @@ const RegisterForm = () => {
         });
         
         if(res.ok) {
-            const form = e.target;
-            form.reset(); 
+            // const form = e.target;
+            // form.reset(); 
             router.push('/');
         } else {
             console.log("User registration failed")
