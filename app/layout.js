@@ -13,7 +13,9 @@ export default function RootLayout({ children }) { // Defining a functional comp
   return (
     <html lang="en"> {/* Setting the language of the HTML document */}
       <body className={inter.className}> {/* Applying Inter font to the body */}
-        <AuthProvider>{children}</AuthProvider> {/* Wrapping children with AuthProvider */}
+        <main className="h-full">
+          <AuthProvider>{children}</AuthProvider> {/* Wrapping children with AuthProvider */}
+        </main>
       </body>
     </html>
   );
