@@ -2,13 +2,17 @@
 
 import Link from "next/link"
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 const RegisterForm = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
   const [error, setError] = useState("");
+
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,9 +21,38 @@ const RegisterForm = () => {
         setError("All fields are required");
         return;
     }
+
+    if(password !== passwordRepeat) {
+        setError("Password do not match");
+        return;
+    }
+
+    try {
+        const res = await fetch('api/checkUserExists/', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email, 
+            }),
+        })
+
+        if(res.ok) {
+            setError("User already exists");
+            return;
+        } 
+
+        setError("");
+        const form = e.target;
+        form.reset(); 
+
+    } catch(error) {
+        console.log("Error during registration :", error)
+    }
     
     try {
-        const res = await fetch('api/register', {
+        const res = await fetch('api/register/', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -34,6 +67,7 @@ const RegisterForm = () => {
         if(res.ok) {
             const form = e.target;
             form.reset(); 
+            router.push('/');
         } else {
             console.log("User registration failed")
         }
@@ -64,6 +98,11 @@ const RegisterForm = () => {
                     onChange={ e => setPassword(e.target.value) } 
                     type="password" 
                     placeholder="Password" 
+                />
+                <input 
+                    onChange={ e => setPasswordRepeat(e.target.value) } 
+                    type="password" 
+                    placeholder="Repeat Password" 
                 />
                 <button className="bg-green-600 text-white font-bold cursor-pointer px-6 py-2">
                     Register
