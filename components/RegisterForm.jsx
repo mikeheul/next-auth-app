@@ -29,6 +29,11 @@ export default function RegisterForm() { // Defining a functional component name
         return;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Wrong email format');
+      return;
+    }
+
     // Regular expression for password requirements
     const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[0-9a-zA-Z!@#$%^&*()_+]{8,}$/;
 
